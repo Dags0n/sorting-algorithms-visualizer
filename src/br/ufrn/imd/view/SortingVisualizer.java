@@ -2,13 +2,16 @@ package br.ufrn.imd.view;
 
 import javax.swing.*;
 import java.awt.*;
-import br.ufrn.imd.model.sorting.*;
 
 public class SortingVisualizer extends JPanel {
     private int[] array;
 
     public SortingVisualizer(int[] array) {
         this.array = array;
+    }
+
+    public int[] getArray() {
+        return array;
     }
 
     // Atualiza o array e repinta o painel

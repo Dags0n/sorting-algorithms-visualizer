@@ -5,21 +5,23 @@ import java.util.Random;
 
 public class BogoSort extends Sorting {
     private SortingVisualizer visualizer;
-    private Random random;
     private final int delay;
 
     public BogoSort(SortingVisualizer visualizer, int delay) {
         this.visualizer = visualizer;
-        this.random = new Random();
         this.delay = delay;
     }
 
     @Override
     public void sort(int[] array) {
+        Random random = new Random();
+
+        // Continua embaralhando o array até que ele esteja ordenado
         while (!isSorted(array)) {
-            shuffle(array);
-            visualizer.setArray(array); // Atualiza a visualização
-            sleep(delay); // Atraso para visualizar o embaralhamento
+            checkPause(); // Verifica se o algoritmo deve pausar antes de embaralhar
+            shuffleArray(array, random);
+            visualizer.setArray(array); // Atualiza a visualização após o embaralhamento
+            sleep(delay); // Adiciona um atraso para a visualização
         }
     }
 
@@ -33,14 +35,15 @@ public class BogoSort extends Sorting {
         return true;
     }
 
-    // Embaralha os elementos do array
-    private void shuffle(int[] array) {
+    // Embaralha o array aleatoriamente
+    private void shuffleArray(int[] array, Random random) {
         for (int i = 0; i < array.length; i++) {
             int randomIndex = random.nextInt(array.length);
-            swap(array, i, randomIndex);
+            swap(array, i, randomIndex); // Utiliza o método de troca da classe base
         }
     }
 
+    // Adiciona um atraso para visualização
     private void sleep(int ms) {
         try {
             Thread.sleep(ms);
@@ -49,4 +52,3 @@ public class BogoSort extends Sorting {
         }
     }
 }
-

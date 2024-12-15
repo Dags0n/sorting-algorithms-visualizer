@@ -17,38 +17,41 @@ public class MergeSort extends Sorting {
     }
 
     private void mergeSort(int[] array, int left, int right) {
+        checkPause(); // Verifica se o algoritmo deve pausar antes de processar
         if (left < right) {
-            int middle = (left + right) / 2;
+            int mid = left + (right - left) / 2;
 
-            // Dividir o array em duas partes
-            mergeSort(array, left, middle);
-            mergeSort(array, middle + 1, right);
+            mergeSort(array, left, mid);
+            mergeSort(array, mid + 1, right);
 
-            // Combinar as partes ordenadas
-            merge(array, left, middle, right);
+            merge(array, left, mid, right);
         }
     }
 
-    private void merge(int[] array, int left, int middle, int right) {
-        int n1 = middle - left + 1; // Tamanho da subarray esquerda
-        int n2 = right - middle;   // Tamanho da subarray direita
+    private void merge(int[] array, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
 
-        // Arrays temporários
+        // Cria arrays temporários
         int[] leftArray = new int[n1];
         int[] rightArray = new int[n2];
 
-        // Copiar dados para os arrays temporários
         for (int i = 0; i < n1; i++) {
             leftArray[i] = array[left + i];
+            visualizer.setArray(array);
         }
         for (int j = 0; j < n2; j++) {
-            rightArray[j] = array[middle + 1 + j];
+            rightArray[j] = array[mid + 1 + j];
+            visualizer.setArray(array);
         }
 
-        // Indices iniciais das subarrays e do array principal
-        int i = 0, j = 0, k = left;
+        int i = 0, j = 0;
+        int k = left;
 
+        // Mescla os subarrays
         while (i < n1 && j < n2) {
+            checkPause(); // Verifica se o algoritmo deve pausar durante a mesclagem
+
             if (leftArray[i] <= rightArray[j]) {
                 array[k] = leftArray[i];
                 i++;
@@ -56,27 +59,32 @@ public class MergeSort extends Sorting {
                 array[k] = rightArray[j];
                 j++;
             }
-            visualizer.setArray(array); // Atualiza a visualização
-            sleep(delay); // Adiciona um atraso para visualização
             k++;
+
+            visualizer.setArray(array); // Atualiza a visualização
+            sleep(delay); // Adiciona atraso para visualização
         }
 
-        // Copiar os elementos restantes de leftArray
+        // Copia os elementos restantes de leftArray
         while (i < n1) {
+            checkPause(); // Verifica se o algoritmo deve pausar
             array[k] = leftArray[i];
-            visualizer.setArray(array); // Atualiza a visualização
-            sleep(delay);
             i++;
             k++;
+
+            visualizer.setArray(array); // Atualiza a visualização
+            sleep(delay); // Adiciona atraso para visualização
         }
 
-        // Copiar os elementos restantes de rightArray
+        // Copia os elementos restantes de rightArray
         while (j < n2) {
+            checkPause(); // Verifica se o algoritmo deve pausar
             array[k] = rightArray[j];
-            visualizer.setArray(array); // Atualiza a visualização
-            sleep(delay);
             j++;
             k++;
+
+            visualizer.setArray(array); // Atualiza a visualização
+            sleep(delay); // Adiciona atraso para visualização
         }
     }
 

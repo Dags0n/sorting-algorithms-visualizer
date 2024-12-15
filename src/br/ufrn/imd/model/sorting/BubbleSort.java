@@ -16,6 +16,7 @@ public class BubbleSort extends Sorting {
         int n = array.length;
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
+                checkPause(); // Verifica se o algoritmo deve pausar
                 if (array[j] > array[j + 1]) {
                     swap(array, j, j + 1);
                     visualizer.setArray(array); // Atualiza a visualização
@@ -33,5 +34,3 @@ public class BubbleSort extends Sorting {
         }
     }
 }
-
-
