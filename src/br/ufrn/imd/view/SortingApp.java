@@ -3,14 +3,26 @@ package br.ufrn.imd.view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import br.ufrn.imd.model.sorting.*;
-import br.ufrn.imd.utils.DataGenerator;
+import br.ufrn.imd.utils.ArrayGenerator;
 
+/**
+ * Classe principal para a interface de visualização de ordenação.
+ *
+ * <p>A `SortingApp` permite ao usuário configurar parâmetros, como tamanho do array e
+ * atraso entre as etapas de visualização, e gerar arrays para serem ordenados.
+ * Os usuários podem optar por inserir arrays manualmente ou gerá-los automaticamente.</p>
+ */
 public class SortingApp extends JFrame {
     private int[] array;
     private int delay;
     private boolean isInserting = false;
 
+    /**
+     * Construtor da classe `SortingApp`.
+     *
+     * <p>Inicializa a interface gráfica e configura as propriedades principais
+     * da janela, como tamanho, título e comportamento ao fechar.</p>
+     */
     public SortingApp() {
         setTitle("Visualizador de Ordenações");
         setSize(600, 400);
@@ -21,6 +33,12 @@ public class SortingApp extends JFrame {
         initUI();
     }
 
+    /**
+     * Inicializa a interface gráfica da aplicação.
+     *
+     * <p>Define o layout da janela, painéis, botões e suas respectivas
+     * funcionalidades, como geração e exibição do array.</p>
+     */
     private void initUI() {
         // Painel principal com gradiente
         JPanel mainPanel = new JPanel(new BorderLayout()) {
@@ -150,7 +168,7 @@ public class SortingApp extends JFrame {
                     arr = newArray;
                 } else {
                     int arrSize = Integer.parseInt(inputText);
-                    arr = DataGenerator.generateRandomArray(arrSize, 0, 100);
+                    arr = ArrayGenerator.generateRandomArray(arrSize, 0, 100);
                 }
                 this.array = arr;
 
@@ -203,204 +221,5 @@ public class SortingApp extends JFrame {
             new MainMenu().setVisible(true);
             dispose();
         });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            SortingApp app = new SortingApp();
-            app.setVisible(true);
-        });
-    }
-}
-
-
-// Diálogo de seleção de algoritmo
-class AlgorithmSelectionDialog extends JDialog {
-    private int[] array;
-
-    public AlgorithmSelectionDialog(JFrame parent, int[] array, int delay) {
-        super(parent, "Selecionar algoritmo", true);
-        this.array = array;
-
-        setSize(350, 200);
-        setLocationRelativeTo(parent);
-        setResizable(false);
-
-        // Painel principal
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        JLabel label = new JLabel("Escolha o algoritmo de ordenação:");
-        label.setFont(new Font("Arial", Font.BOLD, 14));
-
-        JComboBox<String> algorithmComboBox = new JComboBox<>(new String[]{"BubbleSort", "MergeSort", "BogoSort", "QuickSort", "SelectionSort", "InsertionSort", "HeapSort", "ShellSort", "RadixSort"});
-        algorithmComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        JButton okButton = new JButton("OK");
-        okButton.setFont(new Font("Arial", Font.BOLD, 14));
-        okButton.setBackground(new Color(245, 245, 245));
-
-        okButton.addActionListener(e -> {
-            String selectedAlgorithm = (String) algorithmComboBox.getSelectedItem();
-            dispose();
-            new SortingVisualizerWindow(array, delay, selectedAlgorithm);
-        });
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        mainPanel.add(label, gbc);
-
-        gbc.gridy = 1;
-        mainPanel.add(algorithmComboBox, gbc);
-
-        gbc.gridy = 2;
-        mainPanel.add(okButton, gbc);
-
-        add(mainPanel);
-        setVisible(true);
-    }
-
-}
-
-// Janela de visualização
-class SortingVisualizerWindow extends JFrame {
-    private SortingVisualizer visualizer;
-    private Sorting sortingAlgorithm;
-    private int[] array;
-    private int[] originalArray;
-    private String currentAlgorithm;
-    private boolean isRunning = false;
-    private boolean isPaused = false;
-    private int delay;
-    Thread startThread = new Thread(() -> {
-        sortingAlgorithm.sort(array);
-    });
-
-    public SortingVisualizerWindow(int[] array, int delay, String algorithm) {
-        setTitle("Visualização de ordenação");
-        setSize(600, 400);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        this.array = array.clone();
-        this.delay = delay;
-        this.originalArray = array.clone();
-        this.currentAlgorithm = algorithm;
-
-        initComponents();
-        setVisible(true);
-    }
-
-    private void initComponents() {
-        visualizer = new SortingVisualizer(array);
-        initializeAlgorithm(currentAlgorithm);
-
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        topPanel.setBackground(new Color(230, 230, 250));
-        JLabel infoLabel = new JLabel("Algoritmo usado: " + currentAlgorithm);
-        infoLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        topPanel.add(infoLabel);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        buttonPanel.setBackground(new Color(245, 245, 245));
-        JButton startButton = new JButton("Começar");
-        startButton.setFont(new Font("Arial", Font.BOLD, 14));
-        JButton stopButton = new JButton("Pausar");
-        stopButton.setFont(new Font("Arial", Font.BOLD, 14));
-        JButton resetButton = new JButton("Resetar");
-        resetButton.setFont(new Font("Arial", Font.BOLD, 14));
-        JButton backButton = new JButton("Voltar");
-        backButton.setFont(new Font("Arial", Font.BOLD, 14));
-
-        startButton.setBackground(new Color(200, 255, 200));
-        stopButton.setBackground(new Color(255, 255, 200));
-        resetButton.setBackground(new Color(255, 200, 200));
-        backButton.setBackground(new Color(200, 255, 200));
-
-        startButton.addActionListener(e -> {
-            if (isRunning) {
-                return;
-            }
-            isRunning = true;
-            startThread = new Thread(() -> sortingAlgorithm.sort(array));
-            startThread.start();
-        });
-
-        stopButton.addActionListener(e -> {
-            if (isRunning && !isPaused) {
-                isPaused = true;
-                sortingAlgorithm.pause(); // Método para pausar a execução.
-                stopButton.setText("Retomar");
-            } else {
-                isPaused = false;
-                sortingAlgorithm.resume(); // Método para retomar a execução.
-                stopButton.setText("Pausar");
-            }
-        });
-
-
-        resetButton.addActionListener(e -> {
-            stopButton.setText("Pausar");
-            resetToInitialState();
-        });
-
-        backButton.addActionListener(e -> dispose());
-
-        buttonPanel.add(startButton);
-        buttonPanel.add(stopButton);
-        buttonPanel.add(resetButton);
-        buttonPanel.add(backButton);
-
-        add(topPanel, BorderLayout.NORTH);
-        add(visualizer, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-    }
-
-    private void initializeAlgorithm(String algorithm) {
-        switch (algorithm) {
-            case "BubbleSort":
-                sortingAlgorithm = new BubbleSort(visualizer, delay);
-                break;
-            case "MergeSort":
-                sortingAlgorithm = new MergeSort(visualizer, delay);
-                break;
-            case "BogoSort":
-                sortingAlgorithm = new BogoSort(visualizer, delay);
-                break;
-            case "QuickSort":
-                sortingAlgorithm = new QuickSort(visualizer, delay);
-                break;
-            case "SelectionSort":
-                sortingAlgorithm = new SelectionSort(visualizer, delay);
-                break;
-            case "InsertionSort":
-                sortingAlgorithm = new InsertionSort(visualizer, delay);
-                break;
-            case "HeapSort":
-                sortingAlgorithm = new HeapSort(visualizer, delay);
-                break;
-            case "ShellSort":
-                sortingAlgorithm = new ShellSort(visualizer, delay);
-                break;
-            case "RadixSort":
-                sortingAlgorithm = new RadixSort(visualizer, delay);
-                break;
-        }
-    }
-
-    private void resetToInitialState() {
-        this.array = originalArray.clone();
-        getContentPane().remove(visualizer);
-        visualizer = new SortingVisualizer(array);
-        getContentPane().add(visualizer, BorderLayout.CENTER);
-        initializeAlgorithm(this.currentAlgorithm);
-        isRunning = false;
-        isPaused = false;
-        revalidate();
-        repaint();
     }
 }
