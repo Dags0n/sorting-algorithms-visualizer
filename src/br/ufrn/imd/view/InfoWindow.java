@@ -6,11 +6,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+/**
+ * Classe responsável por exibir informações detalhadas sobre algoritmos de ordenação.
+ *
+ * <p>Essa classe fornece uma interface gráfica que permite ao usuário selecionar
+ * um algoritmo de ordenação em um menu suspenso e visualizar informações detalhadas
+ * sobre o funcionamento, complexidade e outras características de cada algoritmo.</p>
+ */
 public class InfoWindow extends JFrame {
     private JComboBox<String> comboBox;
     private JPanel infoPanel;
     private HashMap<String, String[]> algorithmsInfo;
 
+    /**
+     * Construtor da classe InfoWindow.
+     *
+     * <p>Inicializa a janela principal, carregando os dados dos algoritmos e configurando
+     * a interface gráfica para interação com o usuário.</p>
+     */
     public InfoWindow() {
         setTitle("Informações sobre Algoritmos de Ordenação");
         setSize(600, 400);
@@ -22,6 +35,12 @@ public class InfoWindow extends JFrame {
         initUI();
     }
 
+    /**
+     * Inicializa os dados dos algoritmos com informações detalhadas.
+     *
+     * <p>Os dados incluem descrições gerais, funcionamento, complexidade e observações
+     * sobre cada algoritmo de ordenação.</p>
+     */
     private void initData() {
         // Inicializa os dados dos algoritmos com descrições mais detalhadas
         algorithmsInfo = new HashMap<>();
@@ -215,6 +234,12 @@ public class InfoWindow extends JFrame {
 
     }
 
+    /**
+     * Inicializa a interface gráfica da janela.
+     *
+     * <p>Inclui um menu suspenso para seleção de algoritmos, botões para exibir informações
+     * e navegar entre os algoritmos, além de um painel para exibição das informações.</p>
+     */
     private void initUI() {
         // Painel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -279,6 +304,11 @@ public class InfoWindow extends JFrame {
         getContentPane().add(mainPanel);
     }
 
+    /**
+     * Atualiza o painel de informações com os dados do algoritmo selecionado.
+     *
+     * @param algorithm o nome do algoritmo selecionado
+     */
     private void updateInfoPanel(String algorithm) {
         infoPanel.removeAll(); // Remove o que tinha anteriormente
         String[] info = algorithmsInfo.get(algorithm);
@@ -300,12 +330,5 @@ public class InfoWindow extends JFrame {
 
         infoPanel.revalidate();
         infoPanel.repaint();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            InfoWindow infoWindow = new InfoWindow();
-            infoWindow.setVisible(true);
-        });
     }
 }
