@@ -1,48 +1,55 @@
 package br.ufrn.imd.model.sorting;
 
 import br.ufrn.imd.view.SortingVisualizer;
+import br.ufrn.imd.utils.Sleep;
 
+/**
+ * Implementação do algoritmo Selection Sort.
+ *
+ * <p>O Selection Sort é um algoritmo de ordenação simples que percorre o array
+ * para encontrar o menor elemento e o coloca na posição correta. Esse processo
+ * é repetido para cada posição do array até que ele esteja ordenado.</p>
+ */
 public class SelectionSort extends Sorting {
     private SortingVisualizer visualizer;
     private final int delay;
 
+    /**
+     * Construtor da classe SelectionSort.
+     *
+     * @param visualizer o objeto responsável pela visualização do algoritmo
+     * @param delay o tempo de atraso em milissegundos entre os passos do algoritmo
+     */
     public SelectionSort(SortingVisualizer visualizer, int delay) {
         this.visualizer = visualizer;
         this.delay = delay;
     }
 
+    /**
+     * Realiza a ordenação do array utilizando o algoritmo Selection Sort.
+     *
+     * @param array o array a ser ordenado
+     */
     @Override
     public void sort(int[] array) {
         int n = array.length;
 
-        // Itera sobre cada elemento para encontrar o menor e colocá-lo na posição correta
         for (int i = 0; i < n - 1; i++) {
-            checkPause(); // Verifica se o algoritmo deve pausar antes de continuar
+            checkPause();
 
-            // Encontra o índice do menor elemento no subarray restante
             int minIndex = i;
             for (int j = i + 1; j < n; j++) {
-                checkPause(); // Verifica se o algoritmo deve pausar durante a busca
+                checkPause();
                 if (array[j] < array[minIndex]) {
                     minIndex = j;
                 }
             }
 
-            // Troca o menor elemento com o elemento atual
             if (minIndex != i) {
                 swap(array, i, minIndex);
-                visualizer.setArray(array); // Atualiza a visualização após a troca
-                sleep(delay); // Adiciona um pequeno atraso para a visualização
+                visualizer.setArray(array);
+                Sleep.sleep(delay);
             }
-        }
-    }
-
-    // Adiciona um atraso para visualização
-    private void sleep(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 }
